@@ -69,7 +69,7 @@ namespace CSharpToMySQL
                         }
                         else
                         {
-                            Console.WriteLine("This user already exists");
+                            Console.WriteLine("Failed to insert user");
                         }
                         break;
                     case 3:
@@ -105,7 +105,7 @@ namespace CSharpToMySQL
                 Console.WriteLine("1) View products");
                 Console.WriteLine("2) Add product to order");
                 Console.WriteLine("3) View current order");
-                Console.WriteLine("4) View current order");
+                Console.WriteLine("4) Exit from program");
 
                 userSelectionString = Console.ReadLine();
                 userSelection = Convert.ToInt32(userSelectionString);
@@ -125,15 +125,40 @@ namespace CSharpToMySQL
                         int totalQuantity;
                         int userId = MySQLFunctions.getCurrentUserId(conn, userName);
                         Console.WriteLine("Input product ID to buy: ");
-                        productId = Convert.ToInt32(Console.ReadLine());
+
+                        if (!int.TryParse(Console.ReadLine(), out productId))
+                        {
+                            Console.WriteLine("That wasn't a number! Please do a number!");
+                            break;
+                        }
+
                         Console.WriteLine("Input amount to buy: ");
-                        quantity = Convert.ToInt32(Console.ReadLine());
+
+                        if (!int.TryParse(Console.ReadLine(), out quantity))
+                        {
+                            Console.WriteLine("That wasn't a number! Please do a number!");
+                            break;
+                        }
+
+                        if (!MySQLFunctions.doesProductExist(conn, productId))
+                        {
+                            Console.WriteLine("This product does not exist!\n");
+                            break;
+                        }
 
                         totalQuantity = MySQLFunctions.getNumberOfProductsInStock(conn, productId);
 
 
                         int remainingQuantity = totalQuantity - quantity;
-                        int price = MySQLFunctions.getProductPrice(conn, productId);
+
+                        if (quantity > totalQuantity)
+                        {
+                            Console.WriteLine("Sorry, we don't enough of that product!\n");
+                            break;
+                        }
+
+
+                            int price = MySQLFunctions.getProductPrice(conn, productId);
                         int totalPrice = price * quantity;
 
                         MySQLFunctions.updateProductQuantity(conn, remainingQuantity, productId);
@@ -156,14 +181,6 @@ namespace CSharpToMySQL
                         Console.WriteLine("Invalid Selection. Choose again.");
                         break;
                 }
-
-
-
-
-
-
-                
-
             }
         }
     }

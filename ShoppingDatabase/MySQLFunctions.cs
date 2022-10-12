@@ -37,10 +37,26 @@ namespace ShoppingDatabase
         /* Put a new user into the database if they do not exist already */
         public static bool insertNewUser(MySqlConnection connection, string username, string password)
         {
+            
+
+
+            if (username.Length > 20)
+            {
+                Console.WriteLine("The username is too long!");
+                return false;
+            }
+
+            if (password.Length > 40)
+            {
+                Console.WriteLine("The password is too long!");
+                return false;
+            }
+
             if (doesUsernameExist(connection, username))
             {
                 return false;
             }
+
             connection.Open();
 
             cmd = new MySqlCommand("INSERT INTO users(userName, password) VALUES (@userName, @password)", connection);
@@ -201,12 +217,53 @@ namespace ShoppingDatabase
             // While there is data to read it will keep looping
             while (dataReader.Read())
             {
-                Console.WriteLine("User ID: " + dataReader["userId"]);
+                Console.WriteLine("\nUser ID: " + dataReader["userId"]);
                 Console.WriteLine("Product ID: " + dataReader["productId"]);
                 Console.WriteLine("Quantity: " + dataReader["quantity"]);
                 Console.WriteLine("Price: " + dataReader["price"]);
+                
             }
+            dataReader.Close();
             connection.Close();
+            Console.WriteLine("Total invoice price: " + getTotalInvoicePrice(connection, invoiceId) + "\n");
         }
+
+
+        /* Print product table */
+        public static int getTotalInvoicePrice(MySqlConnection connection, int invoiceId)
+        {
+
+            connection.Open();
+            query = "SELECT sum(i.price) as 'total_invoice_cost' FROM shoppingdatabase.invoice as i where i.invoiceId = @invoiceId group by i.invoiceId;";
+            cmd = new MySqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("@invoiceId", invoiceId);
+
+            dataReader = cmd.ExecuteReader();
+            dataReader.Read();// Get first record.
+            int totalInvoicePrice = dataReader.GetInt32(0);
+            dataReader.Close();
+            connection.Close();
+            return totalInvoicePrice;
+        }
+
+
+        public static bool doesProductExist(MySqlConnection connection, int productId)
+        {
+            connection.Open();
+            cmd = new MySqlCommand("select productId from products where products.productId = @productId;", connection);
+            cmd.Parameters.AddWithValue("@productId", productId);
+            var nId = cmd.ExecuteScalar();
+            if (nId != null)
+            {
+                connection.Close();
+                return true;
+            }
+            else
+            {
+                connection.Close();
+                return false;
+            }
+        }
+
     }
 }
