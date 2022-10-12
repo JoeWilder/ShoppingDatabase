@@ -18,7 +18,6 @@ namespace CSharpToMySQL
             // MUST USE THIS FORMAT! (server, database, username, then password)
             string connstring = "SERVER=" + server + ";" + "DATABASE=" + database + ";" + "UID=" + username + ";" + "PASSWORD=" + password + ";";
 
-            string userSelectionString;
             int userSelection = 0;
 
             string userName;
@@ -35,8 +34,11 @@ namespace CSharpToMySQL
                 Console.WriteLine("2) Sign up");
                 Console.WriteLine("3) Exit from interface");
 
-                userSelectionString = Console.ReadLine();
-                userSelection = Convert.ToInt32(userSelectionString);
+
+                if (!int.TryParse(Console.ReadLine(), out userSelection))
+                {
+                    Console.WriteLine("That wasn't a number! Please do a number!");
+                }
 
                 switch (userSelection)
                 {
@@ -91,7 +93,6 @@ namespace CSharpToMySQL
 
 
             int currentInvoiceId = MySQLFunctions.getLatestInvoice(conn) + 1;
-            string userSelectionString;
             int userSelection = -1;
 
             
@@ -107,8 +108,14 @@ namespace CSharpToMySQL
                 Console.WriteLine("3) View current order");
                 Console.WriteLine("4) Exit from program");
 
-                userSelectionString = Console.ReadLine();
-                userSelection = Convert.ToInt32(userSelectionString);
+
+                if (!int.TryParse(Console.ReadLine(), out userSelection))
+                {
+                    Console.WriteLine("That wasn't a number! Please do a number!");
+                }
+
+
+
 
                 
 
