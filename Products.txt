@@ -1,0 +1,30 @@
+Fruit
+	apple
+	banana
+	orange
+	watermelon
+	blueberry
+
+
+Vegetables
+	cucumber
+	green-bean
+	corn
+	potato
+
+
+Baked-Goods
+	apple-pie
+	brownies
+	blueberry-muffin
+
+
+Dairy
+	milk
+	chocolate-milk
+	cheese
+
+
+Meat
+	chicken
+	beef

@@ -1,0 +1,58 @@
+drop database if exists ShoppingDatabase;
+
+
+
+create database ShoppingDatabase;
+use ShoppingDatabase;
+
+
+
+create table if not exists users(userId int NOT NULL AUTO_INCREMENT, userName varchar(20), password varchar(40), primary key(userId));
+
+
+
+create table if not exists users_details(userId int NOT NULL AUTO_INCREMENT, fname varchar(20), lname varchar(20), address varchar(40), phone varchar(20), email varchar(20), primary key(userId));
+
+
+
+create table if not exists invoice (invoiceId int, userId int, productId int, quantity int, price int);
+
+
+
+create table if not exists products (productId int NOT NULL AUTO_INCREMENT, catagory varchar(20), productName varchar(20), description varchar(50), unitsInStock int, price int, primary key(productId));
+
+
+
+insert into products (catagory, productName, description, unitsInStock, price) values
+    ('Fruit', 'McIntosh Apple', 'A red apple', 131, 1),
+    ('Fruit', 'Banana', 'A yellow fruit', 12, 1),
+    ('Fruit', 'Granny Smith Apple', 'A green apple', 48, 2),
+    ('Fruit', 'Watermelon', 'Large green striped melon', 2, 8),
+    ('Fruit', 'Oranges', 'An orange fruit', 34, 2),
+    ('Vegetables', 'Butternut Squash', 'A orange gourde', 12, 4),
+    ('Vegetable', 'Cucumber', 'Crunchy water', 9, 2),
+    ('Vegetable', 'Corn', 'A big lump of knobs, it has the juice', 22, 1),
+    ('Vegetable', 'Potato', 'A tuber from the ground', 39, 2),
+    ('Baked Goods', 'Apple Pie', 'A pie made with apples', 7, 12),
+    ('Baked Goods', 'Brownie', 'A chocolate brownie', 13, 3),
+    ('Baked Goods', 'Blueberry Muffin', 'A muffin made with blueberries', 13, 4),
+    ('Dairy', 'Milk', 'Cow juice', '6', 6),
+    ('Dairy', 'Chocolate-Milk', 'Cow juice made with chocloate', 4, 7),
+    ('Dairy', 'Cheese', 'Fermented milk', 310, 4),
+    ('Meat', 'Chicken', 'Unkown cuts', 49, 6),
+    ('Meat', 'Beef', 'Unknown Cuts', 18, 8);
+
+
+
+insert into invoice (invoiceId, userId, productId, quantity, price) values
+    (1, 1, 4, 1, 8),
+    (1, 1, 5, 5, 2),
+    (2, 1, 10, 1, 12);
+
+
+
+insert into users (userName, password) values
+    ('root', 'password');
+    
+insert into users_details (fname, lname, address, phone, email) values
+    ('Super', 'User', 'The White House', '877-241-LUNA', 'email@gmail.com');
