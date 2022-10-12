@@ -8,6 +8,7 @@ namespace CSharpToMySQL
     {
         static void Main(string[] args)
         {
+            //test
             string server = "localhost"; // If not using a cloud database, use localhost. If using cloud database, use the IP to the server
             string database = "ShoppingDatabase"; // Whatever database you want to use for the application
             string username = "root"; // The username of your MySQL client
