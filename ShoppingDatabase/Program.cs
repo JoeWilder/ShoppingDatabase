@@ -49,7 +49,7 @@ namespace CSharpToMySQL
                         if (MySQLFunctions.doesUserExist(conn, userName, userPassword))
                         {
                             userSelection = 3;
-                            Console.WriteLine("User does exist, start application here");
+                            //Console.WriteLine("User does exist, start application here");
                             startShoppingInterface(conn, userName);
                         }
                         else
@@ -83,14 +83,7 @@ namespace CSharpToMySQL
         }
 
 
-        
-
-
-        
-
-
-        
-
+       
 
         // Start the main application
         static void startShoppingInterface(MySqlConnection conn, string userName)
@@ -104,7 +97,7 @@ namespace CSharpToMySQL
             
 
 
-            while (userSelection != 3)
+            while (userSelection != 4)
             {
 
 
@@ -112,6 +105,7 @@ namespace CSharpToMySQL
                 Console.WriteLine("1) View products");
                 Console.WriteLine("2) Add product to order");
                 Console.WriteLine("3) View current order");
+                Console.WriteLine("4) View current order");
 
                 userSelectionString = Console.ReadLine();
                 userSelection = Convert.ToInt32(userSelectionString);
@@ -142,7 +136,6 @@ namespace CSharpToMySQL
                         int price = MySQLFunctions.getProductPrice(conn, productId);
                         int totalPrice = price * quantity;
 
-
                         MySQLFunctions.updateProductQuantity(conn, remainingQuantity, productId);
                         MySQLFunctions.insertNewInvoice(conn, currentInvoiceId, userId, productId, quantity, totalPrice);
 
@@ -151,11 +144,12 @@ namespace CSharpToMySQL
 
                     case 3: // Print the current order
 
-
-
                         MySQLFunctions.printInvoice(conn, currentInvoiceId);
+                        break;
 
 
+                    case 4:
+                        Console.WriteLine("Exiting the program");
                         break;
 
                     default:

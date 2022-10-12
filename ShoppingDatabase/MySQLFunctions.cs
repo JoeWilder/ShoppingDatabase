@@ -100,12 +100,11 @@ namespace ShoppingDatabase
             dataReader = cmd.ExecuteReader();
             while (dataReader.Read())
             {
-                Console.WriteLine(dataReader["productId"]); // Row N ID... N indicates which row it is currently on
-                Console.WriteLine(dataReader["description"]); // You should assign these variables to an array of objects rather than write them to the console
-                Console.WriteLine(dataReader["productName"]);
-                Console.WriteLine(dataReader["description"]);
-                Console.WriteLine(dataReader["unitsInStock"]);
-                Console.WriteLine(dataReader["price"]);
+                Console.WriteLine("Product ID: " + dataReader["productId"]);
+                Console.WriteLine("Product name: " + dataReader["productName"]);
+                Console.WriteLine("Product description: " + dataReader["description"]);
+                Console.WriteLine("Units in stock: " + dataReader["unitsInStock"]);
+                Console.WriteLine("Price: " + dataReader["price"] + "\n");
             }
             connection.Close();
         }
@@ -202,10 +201,10 @@ namespace ShoppingDatabase
             // While there is data to read it will keep looping
             while (dataReader.Read())
             {
-                Console.WriteLine(dataReader["userId"]);
-                Console.WriteLine(dataReader["productId"]);
-                Console.WriteLine(dataReader["quantity"]);
-                Console.WriteLine(dataReader["price"]);
+                Console.WriteLine("User ID: " + dataReader["userId"]);
+                Console.WriteLine("Product ID: " + dataReader["productId"]);
+                Console.WriteLine("Quantity: " + dataReader["quantity"]);
+                Console.WriteLine("Price: " + dataReader["price"]);
             }
             connection.Close();
         }
