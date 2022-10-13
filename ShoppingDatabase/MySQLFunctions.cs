@@ -1,4 +1,4 @@
-﻿using MySql.Data.MySqlClient;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,21 +7,19 @@ namespace ShoppingDatabase
 {
     class MySQLFunctions
     {
+        static MySqlCommand cmd; // sql command
+        static MySqlDataReader dataReader; // read data from a sql query
+        static string query; // query string
 
-        static MySqlDataReader dataReader;
-        static MySqlCommand cmd;
-        static string query;
 
         /* Check if the given username is in the database */
         public static bool doesUsernameExist(MySqlConnection connection, string username)
         {
             connection.Open();
-
             cmd = new MySqlCommand("select userId from users where users.userName = @user;", connection);
             cmd.Parameters.AddWithValue("@user", username);
-            var nId = cmd.ExecuteScalar();
-
-            if (nId != null)
+            var exists = cmd.ExecuteScalar();
+            if (exists != null)
             {
                 connection.Close();
                 return true;
@@ -34,12 +32,30 @@ namespace ShoppingDatabase
         }
 
 
-        /* Put a new user into the database if they do not exist already */
+        /* Check if a user exists in the database given their username and password */
+        public static bool doesUserExist(MySqlConnection connection, string username, string userPassword)
+        {
+            connection.Open();
+            cmd = new MySqlCommand("select userId from users where users.userName = @user and users.password = @password;", connection);
+            cmd.Parameters.AddWithValue("@user", username);
+            cmd.Parameters.AddWithValue("@password", userPassword);
+            var exists = cmd.ExecuteScalar();
+            if (exists != null)
+            {
+                connection.Close();
+                return true;
+            }
+            else
+            {
+                connection.Close();
+                return false;
+            }
+        }
+
+
+        /* Put a new user into the database if they do not exist already. Return true if successful*/
         public static bool insertNewUser(MySqlConnection connection, string username, string password)
         {
-            
-
-
             if (username.Length > 20)
             {
                 Console.WriteLine("The username is too long!");
@@ -58,35 +74,12 @@ namespace ShoppingDatabase
             }
 
             connection.Open();
-
             cmd = new MySqlCommand("INSERT INTO users(userName, password) VALUES (@userName, @password)", connection);
             cmd.Parameters.AddWithValue("@userName", username);
             cmd.Parameters.AddWithValue("@password", password);
             cmd.ExecuteNonQuery();
-
             connection.Close();
             return true;
-        }
-
-
-        /* Check if a user exists in the database given their username and password */
-        public static bool doesUserExist(MySqlConnection connection, string username, string userPassword)
-        {
-            connection.Open();
-            cmd = new MySqlCommand("select userId from users where users.userName = @user and users.password = @password;", connection);
-            cmd.Parameters.AddWithValue("@user", username);
-            cmd.Parameters.AddWithValue("@password", userPassword);
-            var nId = cmd.ExecuteScalar();
-            if (nId != null)
-            {
-                connection.Close();
-                return true;
-            }
-            else
-            {
-                connection.Close();
-                return false;
-            }
         }
 
 
@@ -98,8 +91,8 @@ namespace ShoppingDatabase
             query = "select MAX(invoiceId) from invoice;";
             cmd = new MySqlCommand(query, connection);
             dataReader = cmd.ExecuteReader();
-            dataReader.Read();// Get first record.
-            currentInvoiceId = dataReader.GetInt32(0);// Get value of first column as an integer.
+            dataReader.Read();
+            currentInvoiceId = dataReader.GetInt32(0);
             dataReader.Close();
             connection.Close();
             return currentInvoiceId;
@@ -107,7 +100,7 @@ namespace ShoppingDatabase
         }
 
 
-        /* Print product table */
+        /* Print product table to console */
         public static void printProductTable(MySqlConnection connection)
         {
             connection.Open();
@@ -134,8 +127,8 @@ namespace ShoppingDatabase
             cmd = new MySqlCommand(query, conn);
             cmd.Parameters.AddWithValue("@productId", productIdToBuy);
             dataReader = cmd.ExecuteReader();
-            dataReader.Read();// Get first record
-            int totalQuantity = dataReader.GetInt32(0);// Get value of first column as integer
+            dataReader.Read();
+            int totalQuantity = dataReader.GetInt32(0);
             dataReader.Close();
             conn.Close();
             return totalQuantity;
@@ -143,19 +136,19 @@ namespace ShoppingDatabase
 
 
         /* Change how many products are left */
-        public static void updateProductQuantity(MySqlConnection conn, int newQuantity, int productIdToBuy)
+        public static void updateProductQuantity(MySqlConnection conn, int newQuantity, int productId)
         {
             conn.Open();
             query = "UPDATE products SET unitsInStock = @remainingStock WHERE productId = @productId;";
             cmd = new MySqlCommand(query, conn);
             cmd.Parameters.AddWithValue("@remainingStock", newQuantity);
-            cmd.Parameters.AddWithValue("@productId", productIdToBuy);
+            cmd.Parameters.AddWithValue("@productId", productId);
             cmd.ExecuteNonQuery();
             conn.Close();
         }
 
 
-        /* Get current users id */
+        /* Get current user id */
         public static int getCurrentUserId(MySqlConnection conn, string userName)
         {
             conn.Open();
@@ -163,8 +156,8 @@ namespace ShoppingDatabase
             cmd = new MySqlCommand(query, conn);
             cmd.Parameters.AddWithValue("@userName", userName);
             dataReader = cmd.ExecuteReader();
-            dataReader.Read();// Get first record.
-            int userId = dataReader.GetInt32(0);// Get value of first column as string.
+            dataReader.Read();
+            int userId = dataReader.GetInt32(0);
             dataReader.Close();
             conn.Close();
             return userId;
@@ -179,8 +172,8 @@ namespace ShoppingDatabase
             cmd = new MySqlCommand(query, conn);
             cmd.Parameters.AddWithValue("@productId", productId);
             dataReader = cmd.ExecuteReader();
-            dataReader.Read();// Get first record.
-            int userId = dataReader.GetInt32(0);// Get value of first column as string.
+            dataReader.Read();
+            int userId = dataReader.GetInt32(0);
             dataReader.Close();
             conn.Close();
             return userId;
@@ -203,18 +196,14 @@ namespace ShoppingDatabase
         }
 
 
-        /* Print product table */
+        /* Print current order to console */
         public static void printInvoice(MySqlConnection connection, int invoiceId)
         {
             connection.Open();
             query = "select * from invoice where invoiceId = @invoiceId;";
             cmd = new MySqlCommand(query, connection);
             cmd.Parameters.AddWithValue("@invoiceId", invoiceId);
-
-            // We set the reader variable to cmd.ExecuteReader() so it can read the entries of the table it receives from first to last
             dataReader = cmd.ExecuteReader();
-
-            // While there is data to read it will keep looping
             while (dataReader.Read())
             {
                 Console.WriteLine("\nUser ID: " + dataReader["userId"]);
@@ -229,24 +218,31 @@ namespace ShoppingDatabase
         }
 
 
-        /* Print product table */
+        /* Return the total price of the most recent invoice entries with the same id */
         public static int getTotalInvoicePrice(MySqlConnection connection, int invoiceId)
         {
-
-            connection.Open();
-            query = "SELECT sum(i.price) as 'total_invoice_cost' FROM shoppingdatabase.invoice as i where i.invoiceId = @invoiceId group by i.invoiceId;";
-            cmd = new MySqlCommand(query, connection);
-            cmd.Parameters.AddWithValue("@invoiceId", invoiceId);
-
-            dataReader = cmd.ExecuteReader();
-            dataReader.Read();// Get first record.
-            int totalInvoicePrice = dataReader.GetInt32(0);
-            dataReader.Close();
-            connection.Close();
-            return totalInvoicePrice;
+            try
+            {
+                connection.Open();
+                query = "SELECT sum(i.price) as 'total_invoice_cost' FROM shoppingdatabase.invoice as i where i.invoiceId = @invoiceId group by i.invoiceId;";
+                cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@invoiceId", invoiceId);
+                dataReader = cmd.ExecuteReader();
+                dataReader.Read();
+                int totalInvoicePrice = dataReader.GetInt32(0);
+                dataReader.Close();
+                connection.Close();
+                return totalInvoicePrice;
+            } catch (Exception e)
+            {
+                dataReader.Close();
+                connection.Close();
+                return 0;
+            }
         }
 
 
+        /* Return true if a product exists */
         public static bool doesProductExist(MySqlConnection connection, int productId)
         {
             connection.Open();
@@ -264,6 +260,5 @@ namespace ShoppingDatabase
                 return false;
             }
         }
-
     }
 }
