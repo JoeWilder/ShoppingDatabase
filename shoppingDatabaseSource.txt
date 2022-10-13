@@ -28,19 +28,19 @@ insert into products (catagory, productName, description, unitsInStock, price) v
     ('Fruit', 'Banana', 'A yellow fruit', 12, 1),
     ('Fruit', 'Granny Smith Apple', 'A green apple', 48, 2),
     ('Fruit', 'Watermelon', 'Large green striped melon', 2, 8),
-    ('Fruit', 'Oranges', 'An orange fruit', 34, 2),
-    ('Vegetables', 'Butternut Squash', 'A orange gourde', 12, 4),
+    ('Fruit', 'Orange', 'An orange fruit', 34, 2),
+    ('Vegetables', 'Butternut Squash', 'An orange gourde', 12, 4),
     ('Vegetable', 'Cucumber', 'Crunchy water', 9, 2),
     ('Vegetable', 'Corn', 'A big lump of knobs, it has the juice', 22, 1),
-    ('Vegetable', 'Potato', 'A tuber from the ground', 39, 2),
+    ('Vegetable', 'Potato', 'A tader from the ground', 39, 2),
     ('Baked Goods', 'Apple Pie', 'A pie made with apples', 7, 12),
     ('Baked Goods', 'Brownie', 'A chocolate brownie', 13, 3),
     ('Baked Goods', 'Blueberry Muffin', 'A muffin made with blueberries', 13, 4),
     ('Dairy', 'Milk', 'Cow juice', '6', 6),
-    ('Dairy', 'Chocolate-Milk', 'Cow juice made with chocloate', 4, 7),
+    ('Dairy', 'Chocolate-Milk', 'Cow juice made with chocolate', 4, 7),
     ('Dairy', 'Cheese', 'Fermented milk', 310, 4),
-    ('Meat', 'Chicken', 'Unkown cuts', 49, 6),
-    ('Meat', 'Beef', 'Unknown Cuts', 18, 8);
+    ('Meat', 'Chicken', 'Nuggets', 49, 6),
+    ('Meat', 'Beef', 'Unknown cuts', 18, 8);
 
 
 
